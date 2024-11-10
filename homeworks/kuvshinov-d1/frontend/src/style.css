@@ -27,6 +27,7 @@ body {
   display: flex;
   min-width: 320px;
   min-height: 100vh;
+  transition: 200ms;
 }
 
 h1 {
@@ -37,8 +38,9 @@ h1 {
 #app {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
+
   text-align: center;
+  display: flex;
 }
 
 .logo {
@@ -72,6 +74,9 @@ button {
   background-color: #1a1a1a;
   cursor: pointer;
   transition: border-color 0.25s;
+  width: 100%;
+  margin-top: 20px;
+
 }
 button:hover {
   border-color: #646cff;
@@ -96,18 +101,40 @@ button:focus-visible {
 .main-block{
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 16px;
+  width: 800px;
+  box-sizing: border-box;
+  margin: 20px;
 
 }
-input{
-  height: 20px;
-  padding: 10px;
+#form-submit{
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  box-sizing: border-box;
 }
-textarea{
-  height: 20px;
+input{
+  height: 40px;
   padding: 10px;
   width: 100%;
-  min-width: 300px;
-  max-width: 300px;
-  max-height: 300px;
+  box-sizing: border-box;
+
+  margin-bottom: -80px;
+  margin-top: 25px;
+
 }
+
+.pl-text{
+  display: flex;
+  font-weight: 600;
+}
+canvas{
+  width: 100%;
+}
+@media (max-width: 900px) {
+  .main-block{
+    width: 100%;
+  }
+}
+

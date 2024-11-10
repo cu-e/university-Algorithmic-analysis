@@ -22,7 +22,8 @@ public:
     void handle_request(std::shared_ptr<tcp::socket> socket, const std::string& expression, double x_min, double x_max, double x_step) override {
         std::string response = calculate_expression(expression, x_min, x_max, x_step);
 
-        std::string http_response = "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\n\r\n" + response;
+        std::string http_response = "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nAccess-Control-Allow-Origin: *\r\nAccess-Control-Allow-Methods: POST, OPTIONS\r\nAccess-Control-Allow-Headers: Content-Type, Expression, X-Min, X-Max, X-Step\r\n\r\n" + response;
+        
         boost::asio::async_write(*socket, boost::asio::buffer(http_response),
             [socket](const boost::system::error_code& ec, std::size_t) {
                 if (ec) {
@@ -72,7 +73,8 @@ public:
     void handle_request(std::shared_ptr<tcp::socket> socket, const std::string& expression, double x_min, double x_max, double x_step) override {
         std::string error_message = "Ошибка: не указано выражение!"; 
 
-        std::string http_response = "HTTP/1.1 400 Bad Request\r\nContent-Type: application/json\r\n\r\n" + error_message;
+        std::string http_response = "HTTP/1.1 400 Bad Request\r\nContent-Type: application/json\r\nAccess-Control-Allow-Origin: *\r\nAccess-Control-Allow-Methods: POST, OPTIONS\r\nAccess-Control-Allow-Headers: Content-Type, Expression, X-Min, X-Max, X-Step\r\n\r\n" + error_message;
+        
         boost::asio::async_write(*socket, boost::asio::buffer(http_response),
             [socket](const boost::system::error_code& ec, std::size_t) {
                 if (ec) {
@@ -143,11 +145,27 @@ private:
                     std::string request_line;
                     std::getline(request_stream, request_line);
 
-                    if (request_line.find("POST") == 0) {
+                    std::istringstream request_line_stream(request_line);
+                    std::string method, path, version;
+                    request_line_stream >> method >> path >> version;
+
+                    if (request_line.find("OPTIONS") == 0) {
+                        // CORS
+                        std::string http_response = "HTTP/1.1 200 OK\r\n"
+                                                    "Access-Control-Allow-Origin: *\r\n"
+                                                    "Access-Control-Allow-Methods: POST, OPTIONS\r\n"
+                                                    "Access-Control-Allow-Headers: Content-Type, Expression, X-Min, X-Max, X-Step\r\n\r\n";
+                        boost::asio::async_write(*socket, boost::asio::buffer(http_response),
+                            [socket](const boost::system::error_code& ec, std::size_t) {
+                                if (ec) {
+                                    std::cerr << "Ошибка отправки ответа на OPTIONS: " << ec.message() << std::endl;
+                                }
+                            });
+                    } else if (request_line.find("POST") == 0 && path.find("/api/")) {
                         std::string expression;
                         double x_min = -10, x_max = 10, x_step = 1;
 
-                        // парсинг
+                        // парсинг тела запроса
                         if (parser_->parse_request(request_stream, expression, x_min, x_max, x_step)) {
                             calculation_handler_->handle_request(socket, expression, x_min, x_max, x_step);
                         } else {
