@@ -5,6 +5,7 @@
 #include <sstream>
 #include <exprtk.hpp>
 #include <json/json.h>
+#include <cmath> // round
 
 using boost::asio::ip::tcp;
 using namespace std::placeholders;
@@ -57,8 +58,8 @@ private:
         for (x = x_min; x <= x_max; x += x_step) {
             double calculated_value = expression.value();
             Json::Value data_point;
-            data_point["x"] = x;
-            data_point["value"] = calculated_value;
+            data_point["x"] = std::round(x*10000)/10000;
+            data_point["value"] = std::round(calculated_value*10000)/10000;
             json_response.append(data_point);
         }
 
@@ -113,7 +114,7 @@ public:
 class WebServer {
 public:
     WebServer(boost::asio::io_context& io_context, short port)
-        : acceptor_(io_context, tcp::endpoint(tcp::v4(), port)), 
+        : acceptor_(io_context, tcp::endpoint(boost::asio::ip::address_v4::any(), port)), 
           calculation_handler_(std::make_shared<CalculationRequestHandler>()), 
           error_handler_(std::make_shared<ErrorRequestHandler>()), 
           parser_(std::make_shared<HttpRequestParser>()) {
@@ -161,7 +162,7 @@ private:
                                     std::cerr << "Ошибка отправки ответа на OPTIONS: " << ec.message() << std::endl;
                                 }
                             });
-                    } else if (request_line.find("POST") == 0 && path.find("/api/")) {
+                    } else if (request_line.find("POST") == 0 && path.find("/api/") == 0) {
                         std::string expression;
                         double x_min = -10, x_max = 10, x_step = 1;
 

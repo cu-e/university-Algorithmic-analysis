@@ -27,7 +27,7 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 
     <button type="submit">Рассчитать график</button>
     <h2>Его график:</h2>
-    <canvas id="myChart" width="800" height="400"></canvas>
+    <canvas id="chart" width="800" height="400"></canvas>
   </form>
   </div>
 `;

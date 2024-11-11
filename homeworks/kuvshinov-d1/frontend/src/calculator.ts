@@ -12,7 +12,8 @@ export async function getGraph(element: HTMLFormElement) {
     const step = parseFloat(formData.get('step') as string);
 
     try {
-      const response = await fetch("http://localhost:8088", {
+      //TODO: CloudFlare требует указывать явный url (http://address:port/api/ )
+      const response = await fetch("http://localhost/api/", {
         method: "POST",
         headers: {
           "Expression": expression,
@@ -30,7 +31,7 @@ export async function getGraph(element: HTMLFormElement) {
       const xValues = data.map((item: { x: number }) => item.x);
       const yValues = data.map((item: { value: number }) => item.value);
 
-      const ctx = document.getElementById('myChart') as HTMLCanvasElement;
+      const ctx = document.getElementById('chart') as HTMLCanvasElement;
 
       if (window.chartInstance) {
         window.chartInstance.destroy();

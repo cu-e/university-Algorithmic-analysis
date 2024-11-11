@@ -1,10 +1,56 @@
 # D1
 ## Описание
 
+
+
  Представляет собой простой веб-сервер на C++ с использованием библиотеки Boost Asio и JSON, который принимает POST-запросы с математическими выражениями. Сервер обрабатывает запросы, вычисляет значения функции в заданном диапазоне и отправляет результат в формате JSON. Далее отправляет результат на веб где результат визуализируется.
+ <p align="center" style="display: flex; justify-content: center;">
+  <img  height="250" src="./README/d-01.png" style="margin-right: 10px;">
+  <img  height="250" src="./README/m-02.png">
+</p>
 
 ## Как запустить?
+### C использованием Docker-compose
+
+#### 1 Установить Docker
+```bash
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+
+sudo apt update
+sudo apt install docker-ce
+
+sudo usermod -aG docker $USER
+```
+
+### 2 Клонирование репозитория
+
+Склонируйте этот репозиторий на свой компьютер:
+
+``` bash
+git clone <URL репозитория>
+cd <название директории бекэнда>
+```
+
+### 2.1 Настройка для внешних соедений
+
+``` bash
+# Явно указать URL бекэнда
+nvim ./frontend/src/calculator.ts
+
+# Настройка Nginx
+nvim ./frontend/nginx.conf
+```
+
+### 3 Запуск Docker-compose
+
+``` bash
+# Флаг -d нужен для запуска в "фоне"
+docker-compose up -d
+```
+
+
 (Ниже указан деплой без использования Docker)
+### Без использования Docker-compose
 
 ### 1. Установка зависимостей
 
