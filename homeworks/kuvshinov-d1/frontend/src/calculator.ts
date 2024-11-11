@@ -13,7 +13,7 @@ export async function getGraph(element: HTMLFormElement) {
 
     try {
       //TODO: CloudFlare требует указывать явный url (http://address:port/api/ )
-      const response = await fetch("http://localhost/api/", {
+      const response = await fetch("http://localhost:800/api/", {
         method: "POST",
         headers: {
           "Expression": expression,

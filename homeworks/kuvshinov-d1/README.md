@@ -98,7 +98,7 @@ g++ -std=c++11 main.cpp -o server -lboost_system -ljsoncpp -I/usr/include/jsoncp
 ``` bash
 curl -X POST -H "Content-Type: application/json" \
      -d '{"expression": "abs(-12*x) + 12312", "x_min": -10, "x_max": 10, "x_step": 1}' \
-     http://localhost:8088
+     http://localhost:800/api/
 ```
 
 Ответ будет в формате JSON и содержит значения функции для каждого x в заданном диапазоне.
